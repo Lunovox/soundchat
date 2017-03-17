@@ -21,15 +21,16 @@ modSoundChat.doAlert = function(sendername, msg)
 			
 				local form = "\n"
 					..core.get_color_escape_sequence("#ff0000").."#######################################################################################\n"
-					..core.get_color_escape_sequence("#ff0000").."###    "..core.get_color_escape_sequence("#ffff00")..msg.."\n"
+					..core.get_color_escape_sequence("#ff0000").."###    "..core.get_color_escape_sequence("#00ff00").."AVISO DO ADMINISTRADOR:\n"
+					..core.get_color_escape_sequence("#ff0000").."###         "..core.get_color_escape_sequence("#ffffFF").." → "..msg.."\n"
 					..core.get_color_escape_sequence("#ff0000").."#######################################################################################\n"
 				minetest.chat_send_player(playername, form)
 				--minetest.log('action',form)
 			end
 		end
-		return true
+		return true, ""
 	else
-		minetest.chat_send_player(sendername, "[SOUNDCHAT:"..core.get_color_escape_sequence("#ff0000").."ERRO"..core.get_color_escape_sequence("#ffffff").."] "..core.get_color_escape_sequence("#8888ff").."/alert <message> ", false)
+		minetest.chat_send_player(sendername, "["..core.get_color_escape_sequence("#00ff00").."SOUNDCHAT"..core.get_color_escape_sequence("#ffffff")..":"..core.get_color_escape_sequence("#ff0000").."ERRO"..core.get_color_escape_sequence("#ffffff").."] "..core.get_color_escape_sequence("#8888ff").."/alert <message> ", false)
 	end
 	return false
 end
@@ -41,9 +42,18 @@ modSoundChat.doMute = function(playername)
 		end
 		modSoundChat.players[playername].mute = not (type(modSoundChat.players[playername].mute)=="boolean" and modSoundChat.players[playername].mute==true)
 		if not modSoundChat.players[playername].mute then --Verifica se o chat esta ativado!
-			minetest.chat_send_player(playername, "[SOUNDCHAT] O sonorizador de chat foi ativado!")
+			minetest.chat_send_player(playername, "["..core.get_color_escape_sequence("#00ff00").."SOUNDCHAT"..core.get_color_escape_sequence("#ffffff").."] O sonorizador de chat foi "..core.get_color_escape_sequence("#00ffff").."ativado"..core.get_color_escape_sequence("#ffffff").."!")
 		else
-			minetest.chat_send_player(playername, "[SOUNDCHAT] O sonorizador de chat foi desativado!")
+			minetest.chat_send_player(playername, "["..core.get_color_escape_sequence("#00ff00").."SOUNDCHAT"..core.get_color_escape_sequence("#ffffff").."] O sonorizador de chat foi "..core.get_color_escape_sequence("#ff0000").."desativado"..core.get_color_escape_sequence("#ffffff").."!")
+		end
+		local player = minetest.get_player_by_name(playername)
+		if player ~=nil and player:is_player() then
+			minetest.sound_play("sfx_chat2", {
+				object = player, --Se retirar esta linha tocará para todos. (Provavelmente ¬¬)
+				gain = 1.0, -- 1.0 = Volume total
+				--max_hear_distance = 1,
+				loop = false,
+			})
 		end
 		return modSoundChat.players[playername].mute
 	end
@@ -76,7 +86,6 @@ minetest.register_on_chat_message(function(sendername,msg)
 						max_hear_distance = 1,
 						loop = false,
 					})
-					--minetest.chat_send_all("<"..core.get_color_escape_sequence("#00ff00")..sendername..core.get_color_escape_sequence("#ffffff").."> "..msg, false)
 					minetest.chat_send_player(playername, 
 						core.get_color_escape_sequence("#00ffff").."O jogador "..core.get_color_escape_sequence("#ffff00")..sendername..core.get_color_escape_sequence("#00ffff").." citou seu nome!"
 						, false
@@ -89,15 +98,6 @@ minetest.register_on_chat_message(function(sendername,msg)
 						max_hear_distance = 1,
 						loop = false,
 					})
-					--[[
-					if minetest.get_player_privs(sendername).server then
-						minetest.chat_send_all("<"..core.get_color_escape_sequence("#ff0000")..sendername..core.get_color_escape_sequence("#ffffff").."> "..msg, true)
-					else
-						minetest.chat_send_all("<"..sendername.."> "..msg, true)
-					end
-					msg=""
-					return true, "Text was sent successfully"
-					--]]
 				end
 			end
 		end --Fim de for
