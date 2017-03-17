@@ -1,0 +1,61 @@
+local propCommandMute = function()
+	return { 
+		params="", 
+		privs={},
+		description = "Ativa e desativa o som do seu proprio chat individual.",
+		func = function(playername, param)
+			modSoundChat.doMute(playername)
+			return true
+		end,
+	}
+end
+
+minetest.register_chatcommand("mute", propCommandMute())
+minetest.register_chatcommand("mudo", propCommandMute())
+
+minetest.register_chatcommand("alert", {
+	params = "mensagem",
+	description = "Faz uma aviso destacado para todos os players online.",
+	privs = {server=true},
+	func = function(playername, params)
+		return modSoundChat.doAlert(playername, params)
+	end,
+})
+
+minetest.register_chatcommand("soundchat", {
+	params = "",
+	description = "Exibe todos os comando deste mod",
+	privs = {},
+	func = function(playername, param)
+		minetest.chat_send_player(playername, "    ", false)
+		minetest.chat_send_player(playername, core.get_color_escape_sequence("#00ff00").." ____                        _  ____ _           _   ", false)
+		minetest.chat_send_player(playername, core.get_color_escape_sequence("#00ff00").."/ ___|  ___  _   _ _ __   __| |/ ___| |__   __ _| |_ ", false)
+		minetest.chat_send_player(playername, core.get_color_escape_sequence("#00ff00").."\\___ \\ / _ \\| | | | '_ \\ / _` | |   | '_ \\ / _` | __|", false)
+		minetest.chat_send_player(playername, core.get_color_escape_sequence("#00ff00").." ___) | (_) | |_| | | | | (_| | |___| | | | (_| | |_ ", false)
+		minetest.chat_send_player(playername, core.get_color_escape_sequence("#00ff00").."|____/ \\___/ \\__,_|_| |_|\\__,_|\\____|_| |_|\\__,_|\\__|", false)
+		minetest.chat_send_player(playername, core.get_color_escape_sequence("#ffff00").."############################################################################################", false)
+		minetest.chat_send_player(playername, "FUNCTION:", false)
+		minetest.chat_send_player(playername, "   * It mod emits a simple sound when a player send any message in the chat, ", false)
+		minetest.chat_send_player(playername, "     and an audible alarm when a player write his name in the chat.", false)
+		minetest.chat_send_player(playername, "SINTAX:", false)
+		minetest.chat_send_player(playername, "   * "..core.get_color_escape_sequence("#00ff00").."/mute", false)
+		minetest.chat_send_player(playername, "   * "..core.get_color_escape_sequence("#00ff00").."/mudo", false)
+		minetest.chat_send_player(playername, "       => Enables and disables the simple sound of your own individual chat.", false)
+		minetest.chat_send_player(playername, "       	 (Do not disable admin alarm)", false)
+		minetest.chat_send_player(playername, "   * "..core.get_color_escape_sequence("#00ff00").."/alert <message>", false)
+		minetest.chat_send_player(playername, "       => The admin can send a text message and an audible crash alert for all players.", false)
+		minetest.chat_send_player(playername, "          (Need the priv 'server')", false)
+		minetest.chat_send_player(playername, core.get_color_escape_sequence("#ffff00").."############################################################################################", false)
+		minetest.chat_send_player(playername, core.get_color_escape_sequence("#00ff00")..playername..", Press F10 and use a mouse scroll to read all this tutorial!", false)
+		
+		local player = minetest.get_player_by_name(playername)
+		if player ~=nil and player:is_player() then
+			minetest.sound_play("sfx_chat2", {
+				object = player, --Se retirar esta linha tocará para todos. (Provavelmente ¬¬)
+				gain = 1.0, -- 1.0 = Volume total
+				--max_hear_distance = 1,
+				loop = false,
+			})
+		end
+	end,
+})

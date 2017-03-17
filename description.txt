@@ -1,4 +1,4 @@
-Exibe um som quando o jogador digita no chat!
+It emits a simple sound when a player send any message in the chat, and an audible alarm when a player write his name in the chat.
 
 Licence: 
  * GNU AGPL: https://pt.wikipedia.org/wiki/GNU_Affero_General_Public_License
