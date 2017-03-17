@@ -62,7 +62,11 @@ end
 minetest.register_on_chat_message(function(sendername,msg)
 	if minetest.setting_getbool("soundchat") and type(msg)=="string" and msg:len()>=3 then
 		for i,player in ipairs(minetest.get_connected_players()) do
-			if player~=nil and player:is_player()~=nil and player:get_player_name()~=nil and player:get_player_name()~=name then --Toca para todos ,exceto para quem enviou a mensagem.
+			if player~=nil 
+				and player:is_player()~=nil 
+				and player:get_player_name()~=nil 
+				and player:get_player_name()~=sendername  --Toca para todos ,exceto para quem enviou a mensagem.
+			then
 				local playername = player:get_player_name()
 				if not modSoundChat.players[playername] then 
 					modSoundChat.players[playername] = { }
