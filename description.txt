@@ -1,0 +1,7 @@
+Exibe um som quando o jogador digita no chat!
+
+Licence: 
+ * GNU AGPL: https://pt.wikipedia.org/wiki/GNU_Affero_General_Public_License
+
+Developers:
+ * Lunovox <lunovox@openmailbox.org>
