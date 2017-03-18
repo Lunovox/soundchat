@@ -1,6 +1,6 @@
 # soundchat
 
-It emits a simple sound when a player send any message in the chat, and an audible alarm when a player write his name in the chat.
+It emits a simple sound when a player send any message in the chat, and an audible alarm when a player write his name in the chat. The admin per command can send a colored warning with flashy sound for all players.
 
 ![](https://raw.githubusercontent.com/Lunovox/soundchat/master/screenshot.png)
 
@@ -11,7 +11,7 @@ It emits a simple sound when a player send any message in the chat, and an audib
  * Lunovox <lunovox@openmailbox.org>
 
 **Commands:**
- * /mute or /mudo 
-		* Enables and disables the simple sound of your own individual chat. (Do not disable admin alarm)
-  * /alert <message> admin alarm)
-		* The admin can send a text message and an audible crash alert for all players. (Need the priv 'server')
+* ````/mute```` or ````/mudo```` 
+  * Enables and disables the simple sound of your own individual chat. (Do not disable admin alarm)
+* ````/alert <message>````
+  * Send a colored warning with flashy sound for all players (Need the priv 'server')
