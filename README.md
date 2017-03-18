@@ -8,7 +8,7 @@ It emits a simple sound when a player send any message in the chat, and an audib
  * GNU AGPL: https://pt.wikipedia.org/wiki/GNU_Affero_General_Public_License
 
 **Developers:**
- * Lunovox <lunovox@openmailbox.org>
+ * [Lunovox Heavenfinder](mailto:lunovox@openmailbox.org)
 
 **Commands:**
 * ````/mute```` or ````/mudo```` 
