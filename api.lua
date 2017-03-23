@@ -59,6 +59,8 @@ modSoundChat.doMute = function(playername)
 	end
 end
 
+--minetest.register_on_receiving_chat_message(function(sendername,msg)
+--minetest.register_on_sending_chat_message(function(sendername,msg)
 minetest.register_on_chat_message(function(sendername,msg)
 	if minetest.setting_getbool("soundchat") and type(msg)=="string" and msg:len()>=3 then
 		for i,player in ipairs(minetest.get_connected_players()) do
@@ -94,6 +96,13 @@ minetest.register_on_chat_message(function(sendername,msg)
 						core.get_color_escape_sequence("#00ffff").."O jogador "..core.get_color_escape_sequence("#ffff00")..sendername..core.get_color_escape_sequence("#00ffff").." citou seu nome!"
 						, false
 					)
+					--[[
+					minetest.chat_send_player(playername, 
+						core.colorize("#00ff00", "["..playername.."]: ")
+						..msg
+					)
+					return true
+					--]]
 					break --para de executar o comando 'for'
 				elseif not modSoundChat.players[playername].mute then --#################### CONVERSA COMUM #########################################################
 					modSoundChat.players[playername].handler = minetest.sound_play("sfx_chat_speak", {

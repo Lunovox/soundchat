@@ -2,7 +2,7 @@ local propCommandMute = function()
 	return { 
 		params="", 
 		privs={},
-		description = "Ativa e desativa o som do seu proprio chat individual.",
+		description = "Enables and disables the simple sound of your own individual chat. (Do not disable admin alarm)",
 		func = function(playername, param)
 			modSoundChat.doMute(playername)
 			return true
@@ -14,8 +14,8 @@ minetest.register_chatcommand("mute", propCommandMute())
 minetest.register_chatcommand("mudo", propCommandMute())
 
 minetest.register_chatcommand("alert", {
-	params = "mensagem",
-	description = "Faz uma aviso destacado para todos os players online.",
+	params = "<message>",
+	description = "Send a colored warning with flashy sound for all players (Need the priv 'server')",
 	privs = {server=true},
 	func = function(playername, params)
 		return modSoundChat.doAlert(playername, params)
@@ -24,7 +24,7 @@ minetest.register_chatcommand("alert", {
 
 minetest.register_chatcommand("soundchat", {
 	params = "",
-	description = "Exibe todos os comando deste mod",
+	description = "Show all commands of mod soundchat.",
 	privs = {},
 	func = function(playername, param)
 		minetest.chat_send_player(playername, "    ", false)
