@@ -1,11 +1,11 @@
 modSoundChat = { }
 modSoundChat.players = { }
 
-if minetest.setting_getbool("soundchat")~= false then
-	minetest.setting_set("soundchat", "true")
+if core.setting_getbool("soundchat")~= false then
+	core.setting_setbool("soundchat", true)
 end
-if minetest.setting_getbool("disable_escape_sequences")~= false then
-	minetest.setting_set("disable_escape_sequences", "true")
+if core.setting_getbool("disable_escape_sequences")~= false then
+	core.setting_setbool("disable_escape_sequences", true)
 	--core.colorize(color, message)
 	--core.get_background_escape_sequence("#00ff00")
 	--core.get_color_escape_sequence("#ff0000")
@@ -22,7 +22,7 @@ modSoundChat.doAlert = function(sendername, msg)
 				local form = "\n"
 					..core.get_color_escape_sequence("#ff0000").."#######################################################################################\n"
 					..core.get_color_escape_sequence("#ff0000").."###    "..core.get_color_escape_sequence("#00ff00").."AVISO DO ADMINISTRADOR:\n"
-					..core.get_color_escape_sequence("#ff0000").."###         "..core.get_color_escape_sequence("#ffffFF").." → "..msg.."\n"
+					..core.get_color_escape_sequence("#ff0000").."###         "..core.get_color_escape_sequence("#ffffFF").." -> "..msg.."\n"
 					..core.get_color_escape_sequence("#ff0000").."#######################################################################################\n"
 				minetest.chat_send_player(playername, form)
 				--minetest.log('action',form)
@@ -62,7 +62,7 @@ end
 --minetest.register_on_receiving_chat_message(function(sendername,msg)
 --minetest.register_on_sending_chat_message(function(sendername,msg)
 minetest.register_on_chat_message(function(sendername,msg)
-	if minetest.setting_getbool("soundchat") and type(msg)=="string" and msg:len()>=3 then
+	if core.setting_getbool("soundchat") and type(msg)=="string" and msg:len()>=3 then
 		for i,player in ipairs(minetest.get_connected_players()) do
 			if player~=nil 
 				and player:is_player()~=nil 
@@ -114,5 +114,5 @@ minetest.register_on_chat_message(function(sendername,msg)
 				end
 			end
 		end --Fim de for
-	end --Fim de if minetest.setting_getbool("soundchat") and msg and msg:len()>=2 then
+	end --Fim de if core.setting_getbool("soundchat") and msg and msg:len()>=2 then
 end)
