@@ -116,3 +116,21 @@ minetest.register_on_chat_message(function(sendername,msg)
 		end --Fim de for
 	end --Fim de if core.setting_getbool("soundchat") and msg and msg:len()>=2 then
 end)
+
+minetest.register_on_joinplayer(function(player)
+	minetest.sound_play("sfx_login", {
+		object = player, --Se retirar esta linha tocará para todos. (Provavelmente ¬¬)
+		gain = 1.0, -- 1.0 = Volume total
+		max_hear_distance = 64000,
+		loop = false,
+	})
+end)
+
+minetest.register_on_leaveplayer(function(player)
+	minetest.sound_play("sfx_logout", {
+		object = player, --Se retirar esta linha tocará para todos. (Provavelmente ¬¬)
+		gain = 1.0, -- 1.0 = Volume total
+		max_hear_distance = 64000,
+		loop = false,
+	})
+end)
