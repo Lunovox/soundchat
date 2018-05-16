@@ -61,76 +61,82 @@ end
 
 --minetest.register_on_receiving_chat_message(function(sendername,msg)
 --minetest.register_on_sending_chat_message(function(sendername,msg)
-minetest.register_on_chat_message(function(sendername,msg)
-	if core.setting_getbool("soundchat") and type(msg)=="string" and msg:len()>=3 then
-		for i,player in ipairs(minetest.get_connected_players()) do
-			if player~=nil 
-				and player:is_player()~=nil 
-				and player:get_player_name()~=nil 
-				and player:get_player_name()~=sendername  --Toca para todos ,exceto para quem enviou a mensagem.
-			then
-				local playername = player:get_player_name()
-				if not modSoundChat.players[playername] then 
-					modSoundChat.players[playername] = { }
-				end
-				if modSoundChat.players[playername].handler ~=nil then 
-					minetest.sound_stop(modSoundChat.players[playername].handler)
-				end
-				modSoundChat.players[playername].mute = (type(modSoundChat.players[playername].mute)=="boolean" and modSoundChat.players[playername].mute==true)
-				
-				if  
-					string and string.len and string.find and string.lower
-					and type(playername)=="string" and type(msg)=="string"
-					and (
-						string.find(string.lower(msg), string.lower(playername))
-						or (string.len(msg)>=4 and string.find(string.lower(playername), string.lower(msg)))
-					)
-				then --#################### CHAMAR ATENÇÃO #########################################################
-					modSoundChat.players[playername].handler = minetest.sound_play("sfx_chat_playername", {
-						object = player, --Se retirar esta linha tocará para todos. (Provavelmente ¬¬)
-						gain = 1.0, -- 1.0 = Volume total
-						max_hear_distance = 1,
-						loop = false,
-					})
-					minetest.chat_send_player(playername, 
-						core.get_color_escape_sequence("#00ffff").."O jogador "..core.get_color_escape_sequence("#ffff00")..sendername..core.get_color_escape_sequence("#00ffff").." citou seu nome!"
-						, false
-					)
-					--[[
-					minetest.chat_send_player(playername, 
-						core.colorize("#00ff00", "["..playername.."]: ")
-						..msg
-					)
-					return true
-					--]]
-					break --para de executar o comando 'for'
-				elseif not modSoundChat.players[playername].mute then --#################### CONVERSA COMUM #########################################################
-					modSoundChat.players[playername].handler = minetest.sound_play("sfx_chat_speak", {
-						object = player, --Se retirar esta linha tocará para todos. (Provavelmente ¬¬)
-						gain = 1.0, -- 1.0 = Volume total
-						max_hear_distance = 1,
-						loop = false,
-					})
-				end
+
+minetest.register_on_chat_message(function(sendername, msg)
+	
+	for i,player in ipairs(minetest.get_connected_players()) do
+		if player and player:is_player() and player:get_player_name() then
+			local playername = player:get_player_name()
+			
+			if minetest.get_player_privs(sendername).server then
+				minetest.chat_send_player(
+					playername, 
+					core.colorize("#FF0000", ""..sendername.." (Admin): ")..msg
+				)
+			else
+				minetest.chat_send_player(
+					playername, 
+					core.colorize("#00FF00", sendername..": ")..msg
+				)
 			end
-		end --Fim de for
-	end --Fim de if core.setting_getbool("soundchat") and msg and msg:len()>=2 then
+			--]]
+			if core.setting_getbool("soundchat") and type(msg)=="string" and msg:len()>=3 then
+				if playername~=sendername then --Toca para todos ,exceto para quem enviou a mensagem.
+					if not modSoundChat.players[playername] then 
+						modSoundChat.players[playername] = { }
+					end
+					if modSoundChat.players[playername].handler ~=nil then 
+						minetest.sound_stop(modSoundChat.players[playername].handler)
+					end
+					modSoundChat.players[playername].mute = (type(modSoundChat.players[playername].mute)=="boolean" and modSoundChat.players[playername].mute==true)
+				
+					if msg:lower():find(playername:lower())
+						or (
+							msg:len()>=4 and playername:lower():find(msg:lower())
+						)
+					then --#################### CHAMAR ATENÇÃO #########################################################
+						modSoundChat.players[playername].handler = minetest.sound_play("sfx_chat_playername", {
+							object = player, --Se retirar esta linha tocará para todos. (Provavelmente ¬¬)
+							gain = 1.0, -- 1.0 = Volume total
+							max_hear_distance = 0,
+							loop = false,
+						})
+						minetest.chat_send_player(playername, 
+							--core.get_color_escape_sequence("#ffff00")..sendername..core.get_color_escape_sequence("#00ffff").." citou seu nome!"
+							core.colorize("#FF00FF", "[SOUNDCHAT] ")
+							..(
+								("O '%s' citou seu nome!"):format(core.colorize("#FFFF00", sendername))
+							)
+						)
+					elseif not modSoundChat.players[playername].mute then --#################### CONVERSA COMUM #########################################################
+						modSoundChat.players[playername].handler = minetest.sound_play("sfx_chat_speak", {
+							object = player, --Se retirar esta linha tocará para todos. (Provavelmente ¬¬)
+							gain = 1.0, -- 1.0 = Volume total
+							max_hear_distance = 0,
+							loop = false,
+						})
+					end
+				end
+			end --Fim de if core.setting_getbool("soundchat") and msg and msg:len()>=2 then
+		end --if player and player:is_player() and player:get_player_name() then
+	end --Fim de for
+	return true
 end)
 
 minetest.register_on_joinplayer(function(player)
 	minetest.sound_play("sfx_login", {
-		object = player, --Se retirar esta linha tocará para todos. (Provavelmente ¬¬)
+		--object = player, --Se retirar esta linha tocará para todos. (Provavelmente ¬¬)
 		gain = 1.0, -- 1.0 = Volume total
-		max_hear_distance = 64000,
+		--max_hear_distance = 64000,
 		loop = false,
 	})
 end)
 
 minetest.register_on_leaveplayer(function(player)
 	minetest.sound_play("sfx_logout", {
-		object = player, --Se retirar esta linha tocará para todos. (Provavelmente ¬¬)
+		--object = player, --Se retirar esta linha tocará para todos. (Provavelmente ¬¬)
 		gain = 1.0, -- 1.0 = Volume total
-		max_hear_distance = 64000,
+		--max_hear_distance = 64000,
 		loop = false,
 	})
 end)
