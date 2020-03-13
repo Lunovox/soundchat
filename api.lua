@@ -63,7 +63,7 @@ end
 --minetest.register_on_sending_chat_message(function(sendername,msg)
 
 minetest.register_on_chat_message(function(sendername, msg)
-	
+	if minetest.get_player_privs(sendername).shout then
 	for i,player in ipairs(minetest.get_connected_players()) do
 		if player and player:is_player() and player:get_player_name() then
 			local playername = player:get_player_name()
@@ -121,6 +121,7 @@ minetest.register_on_chat_message(function(sendername, msg)
 		end --if player and player:is_player() and player:get_player_name() then
 	end --Fim de for
 	return true
+   end --if minetest.get_player_privs(sendername).shout then
 end)
 
 minetest.register_on_joinplayer(function(player)
