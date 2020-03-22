@@ -1,9 +1,52 @@
 modSoundChat = { }
 modSoundChat.players = { }
 
+--[[
 if core.setting_getbool("soundchat")~= false then
 	core.setting_setbool("soundchat", true)
 end
+--]]
+--modSoundChat.terminaldialogs = core.setting_getbool("soundchat")
+--modSoundChat.callSendMessage = core.setting_getbool("soundchat.callsendmessage")
+--modSoundChat.callPlayerName = core.setting_getbool("soundchat.callplayername")
+
+modSoundChat.isEnabled = function()
+   local conf = minetest.setting_get("soundchat")
+   if type(conf)=="nil" or conf == "" then
+         conf = true
+      minetest.setting_setbool("soundchat", conf)
+   end
+   return conf
+end
+
+modSoundChat.isPrintTerminalDialogs = function()
+   local conf = minetest.setting_get("soundchat.terminaldialogs")
+   if type(conf)=="nil" or conf == "" then
+      conf = true
+      core.setting_setbool("soundchat.terminaldialogs", conf)
+   end
+   return conf
+end
+
+modSoundChat.isCall = {
+   SendMessage = function()
+      local conf = minetest.setting_get("soundchat.call.onsendmessage")
+      if type(conf)=="nil" or conf == "" then
+         conf = true
+         core.setting_setbool("soundchat.call.onsendmessage", conf)
+      end
+      return conf
+   end,
+   PlayerName = function()
+      local conf = minetest.setting_get("soundchat.call.onplayername")
+      if type(conf)=="nil" or conf == "" then
+         conf = true
+         core.setting_setbool("soundchat.call.onplayername", conf)
+      end
+      return conf
+   end,
+}
+
 if core.setting_getbool("disable_escape_sequences")~= false then
 	core.setting_setbool("disable_escape_sequences", true)
 	--core.colorize(color, message)
@@ -48,12 +91,12 @@ modSoundChat.doMute = function(playername)
 		end
 		local player = minetest.get_player_by_name(playername)
 		if player ~=nil and player:is_player() then
-			minetest.sound_play("sfx_chat2", {
-				object = player, --Se retirar esta linha tocará para todos. (Provavelmente ¬¬)
-				gain = 1.0, -- 1.0 = Volume total
-				--max_hear_distance = 1,
-				loop = false,
-			})
+    			minetest.sound_play("sfx_chat2", {
+    				object = player, --Se retirar esta linha tocará para todos. (Provavelmente ¬¬)
+    				gain = 1.0, -- 1.0 = Volume total
+    				--max_hear_distance = 1,
+    				loop = false,
+    			})
 		end
 		return modSoundChat.players[playername].mute
 	end
@@ -64,6 +107,8 @@ end
 
 minetest.register_on_chat_message(function(sendername, msg)
 	if minetest.get_player_privs(sendername).shout then
+
+
 	for i,player in ipairs(minetest.get_connected_players()) do
 		if player and player:is_player() and player:get_player_name() then
 			local playername = player:get_player_name()
@@ -79,8 +124,11 @@ minetest.register_on_chat_message(function(sendername, msg)
 					core.colorize("#00FF00", sendername..": ")..msg
 				)
 			end
+    if modSoundChat.isPrintTerminalDialogs() then
+        print("<"..sendername.."> "..msg)
+    end
 			--]]
-			if core.setting_getbool("soundchat") and type(msg)=="string" and msg:len()>=3 then
+			if modSoundChat.isEnabled() and type(msg)=="string" and msg:len()>=3 then
 				if playername~=sendername then --Toca para todos ,exceto para quem enviou a mensagem.
 					if not modSoundChat.players[playername] then 
 						modSoundChat.players[playername] = { }
@@ -95,12 +143,14 @@ minetest.register_on_chat_message(function(sendername, msg)
 							msg:len()>=4 and playername:lower():find(msg:lower())
 						)
 					then --#################### CHAMAR ATENÇÃO #########################################################
-						modSoundChat.players[playername].handler = minetest.sound_play("sfx_chat_playername", {
-							object = player, --Se retirar esta linha tocará para todos. (Provavelmente ¬¬)
-							gain = 1.0, -- 1.0 = Volume total
-							max_hear_distance = 0,
-							loop = false,
-						})
+    if modSoundChat.isCall.PlayerName() then
+						    modSoundChat.players[playername].handler = minetest.sound_play("sfx_chat_playername", {
+							    object = player, --Se retirar esta linha tocará para todos. (Provavelmente ¬¬)
+		    					gain = 1.0, -- 1.0 = Volume total
+			    				max_hear_distance = 0,
+		    					loop = false,
+		    				})
+    end
 						minetest.chat_send_player(playername, 
 							--core.get_color_escape_sequence("#ffff00")..sendername..core.get_color_escape_sequence("#00ffff").." citou seu nome!"
 							core.colorize("#FF00FF", "[SOUNDCHAT] ")
@@ -109,15 +159,17 @@ minetest.register_on_chat_message(function(sendername, msg)
 							)
 						)
 					elseif not modSoundChat.players[playername].mute then --#################### CONVERSA COMUM #########################################################
-						modSoundChat.players[playername].handler = minetest.sound_play("sfx_chat_speak", {
-							object = player, --Se retirar esta linha tocará para todos. (Provavelmente ¬¬)
-							gain = 1.0, -- 1.0 = Volume total
-							max_hear_distance = 0,
-							loop = false,
-						})
+    if modSoundChat.isCall.SendMessage() then
+    						modSoundChat.players[playername].handler = minetest.sound_play("sfx_chat_speak", {
+    							object = player, --Se retirar esta linha tocará para todos. (Provavelmente ¬¬)
+    							gain = 1.0, -- 1.0 = Volume total
+    							max_hear_distance = 0,
+    							loop = false,
+    						})
+    end
 					end
 				end
-			end --Fim de if core.setting_getbool("soundchat") and msg and msg:len()>=2 then
+			end --Fim de if modSoundChat.isEnabled() and msg and msg:len()>=2 then
 		end --if player and player:is_player() and player:get_player_name() then
 	end --Fim de for
 	return true
