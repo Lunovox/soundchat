@@ -107,7 +107,9 @@ end
 
 minetest.register_on_chat_message(function(sendername, msg)
 	if minetest.get_player_privs(sendername).shout then
-
+   if modSoundChat.isPrintTerminalDialogs() then
+      print("<"..sendername.."> "..msg)
+   end
 
 	for i,player in ipairs(minetest.get_connected_players()) do
 		if player and player:is_player() and player:get_player_name() then
@@ -124,9 +126,6 @@ minetest.register_on_chat_message(function(sendername, msg)
 					core.colorize("#00FF00", sendername..": ")..msg
 				)
 			end
-    if modSoundChat.isPrintTerminalDialogs() then
-        print("<"..sendername.."> "..msg)
-    end
 			--]]
 			if modSoundChat.isEnabled() and type(msg)=="string" and msg:len()>=3 then
 				if playername~=sendername then --Toca para todos ,exceto para quem enviou a mensagem.
