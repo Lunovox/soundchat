@@ -13,6 +13,27 @@ end
 minetest.register_chatcommand("mute", propCommandMute())
 minetest.register_chatcommand("mudo", propCommandMute())
 
+--##################################################
+
+local propCommandMuteCall = function()
+	return { 
+		params="", 
+		privs={},
+		description = "Enables and disables the alarm sound of call your name.",
+		func = function(playername, param)
+			modSoundChat.doMuteCall(playername)
+			return true
+		end,
+	}
+end
+
+minetest.register_chatcommand("mutecall", propCommandMuteCall())
+minetest.register_chatcommand("nomemudo", propCommandMuteCall())
+minetest.register_chatcommand("emudecerchamada", propCommandMuteCall())
+
+
+--##################################################
+
 minetest.register_chatcommand("alert", {
 	params = "<message>",
 	description = "Send a colored warning with flashy sound for all players (Need the priv 'server')",
@@ -22,6 +43,7 @@ minetest.register_chatcommand("alert", {
 	end,
 })
 
+--[[
 minetest.register_chatcommand("soundchat", {
 	params = "",
 	description = "Show all commands of mod soundchat.",
@@ -60,3 +82,4 @@ minetest.register_chatcommand("soundchat", {
 		end
 	end,
 })
+--]]

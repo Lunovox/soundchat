@@ -5,13 +5,15 @@ It emits a simple sound when a player send any message in the chat, and an audib
 ![](https://raw.githubusercontent.com/Lunovox/soundchat/master/screenshot.png)
 
 **Licence:**
- * GNU AGPL: https://pt.wikipedia.org/wiki/GNU_Affero_General_Public_License
+
+* GNU AGPL: https://pt.wikipedia.org/wiki/GNU_Affero_General_Public_License
 
 **Developers:**
- * [Lunovox Heavenfinder](mailto:lunovox@openmailbox.org)
+
+* Lunovox Heavenfinder: [email](mailto:lunovox@disroot.org), [xmpp](xmpp:lunovox@disroot.org?join), [social web](http:mastodon.social/@lunovox), [audio conference](mumble:libreplanetbr.org), [more contacts](https:libreplanet.org/wiki/User:Lunovox)
 
 **Commands:**
-* ````/mute```` or ````/mudo```` 
-  * Enables and disables the simple sound of your own individual chat. (Do not disable admin alarm)
-* ````/alert <message>````
-  * Send a colored warning with flashy sound for all players (Need the priv 'server')
+
+* ````/mute```` or ````/mudo```` to enables and disables the simple sound of your own individual chat.
+* ````/mutecall```` or ````/nomemudo```` or ````/emudecerchamada```` to enables and disables the alarm sound of call your name.
+* ````/alert <message>```` to send a colored warning with flashy sound for all players (Need the priv 'server')

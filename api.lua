@@ -102,6 +102,30 @@ modSoundChat.doMute = function(playername)
 	end
 end
 
+modSoundChat.doMuteCall = function(playername)
+	if type(playername)=="string" and playername~="" then
+		if not modSoundChat.players[playername] then 
+			modSoundChat.players[playername] = { }
+		end
+		modSoundChat.players[playername].muteCall = not (type(modSoundChat.players[playername].muteCall)=="boolean" and modSoundChat.players[playername].muteCall==true)
+		if not modSoundChat.players[playername].muteCall then --Verifica se a chamada de nome de jogador esta ativada!
+			minetest.chat_send_player(playername, "["..core.get_color_escape_sequence("#00ff00").."SOUNDCHAT"..core.get_color_escape_sequence("#ffffff").."] O sonorizador de chamada de nome de jogador foi "..core.get_color_escape_sequence("#00ffff").."ativado"..core.get_color_escape_sequence("#ffffff").."!")
+		else
+			minetest.chat_send_player(playername, "["..core.get_color_escape_sequence("#00ff00").."SOUNDCHAT"..core.get_color_escape_sequence("#ffffff").."] O sonorizador de chamada de nome de jogador foi "..core.get_color_escape_sequence("#ff0000").."desativado"..core.get_color_escape_sequence("#ffffff").."!")
+		end
+		local player = minetest.get_player_by_name(playername)
+		if player ~=nil and player:is_player() then
+    			minetest.sound_play("sfx_chat2", {
+    				object = player, --Se retirar esta linha tocará para todos. (Provavelmente ¬¬)
+    				gain = 1.0, -- 1.0 = Volume total
+    				--max_hear_distance = 1,
+    				loop = false,
+    			})
+		end
+		return modSoundChat.players[playername].muteCall
+	end
+end
+
 --minetest.register_on_receiving_chat_message(function(sendername,msg)
 --minetest.register_on_sending_chat_message(function(sendername,msg)
 
@@ -136,27 +160,30 @@ minetest.register_on_chat_message(function(sendername, msg)
 						minetest.sound_stop(modSoundChat.players[playername].handler)
 					end
 					modSoundChat.players[playername].mute = (type(modSoundChat.players[playername].mute)=="boolean" and modSoundChat.players[playername].mute==true)
+					modSoundChat.players[playername].muteCall = (type(modSoundChat.players[playername].muteCall)=="boolean" and modSoundChat.players[playername].muteCall==true)
 				
 					if msg:lower():find(playername:lower())
 						or (
 							msg:len()>=4 and playername:lower():find(msg:lower())
 						)
 					then --#################### CHAMAR ATENÇÃO #########################################################
-    if modSoundChat.isCall.PlayerName() then
-						    modSoundChat.players[playername].handler = minetest.sound_play("sfx_chat_playername", {
-							    object = player, --Se retirar esta linha tocará para todos. (Provavelmente ¬¬)
-		    					gain = 1.0, -- 1.0 = Volume total
-			    				max_hear_distance = 0,
-		    					loop = false,
-		    				})
+    if not modSoundChat.players[playername].muteCall then
+       if modSoundChat.isCall.PlayerName() then
+   						    modSoundChat.players[playername].handler = minetest.sound_play("sfx_chat_playername", {
+   							    object = player, --Se retirar esta linha tocará para todos. (Provavelmente ¬¬)
+   		    					gain = 1.0, -- 1.0 = Volume total
+   			    				max_hear_distance = 0,
+   		    					loop = false,
+   		    				})
+       end
+   						minetest.chat_send_player(playername, 
+   							--core.get_color_escape_sequence("#ffff00")..sendername..core.get_color_escape_sequence("#00ffff").." citou seu nome!"
+   							core.colorize("#FF00FF", "[SOUNDCHAT] ")
+   							..(
+   								("O '%s' citou seu nome!"):format(core.colorize("#FFFF00", sendername))
+   							)
+   						)
     end
-						minetest.chat_send_player(playername, 
-							--core.get_color_escape_sequence("#ffff00")..sendername..core.get_color_escape_sequence("#00ffff").." citou seu nome!"
-							core.colorize("#FF00FF", "[SOUNDCHAT] ")
-							..(
-								("O '%s' citou seu nome!"):format(core.colorize("#FFFF00", sendername))
-							)
-						)
 					elseif not modSoundChat.players[playername].mute then --#################### CONVERSA COMUM #########################################################
     if modSoundChat.isCall.SendMessage() then
     						modSoundChat.players[playername].handler = minetest.sound_play("sfx_chat_speak", {
