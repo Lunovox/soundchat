@@ -78,6 +78,49 @@ modSoundChat.doAlert = function(sendername, msg)
 	return false
 end
 
+modSoundChat.doTimerShutdown = function(secounds, message)
+   if type(secounds)=="number" then
+      if secounds>=0 then
+         modSoundChat.timeCounter = secounds
+      else
+         avisodeerror()
+      end
+   else
+      if type(modSoundChat.timeCounter)~="number" or modSoundChat.timeCounter<0 then
+         modSoundChat.timeCounter = 0
+      else
+         modSoundChat.timeCounter = modSoundChat.timeCounter - 1
+      end
+   end
+   if type(message)=="string" and message~="" then
+      modSoundChat.textShutdown = message
+   end
+   if modSoundChat.timeCounter < 1 then 
+      if type(modSoundChat.textShutdown)=="string" and modSoundChat.textShutdown~="" then
+         minetest.chat_send_all(core.colorize("#ff0000", modSoundChat.textShutdown))
+      end
+      minetest.request_shutdown()
+   elseif modSoundChat.timeCounter % 5 == 0 and type(modSoundChat.textShutdown)=="string" and modSoundChat.textShutdown~="" then
+      minetest.chat_send_all((("Reiniciando em: %02d"):format(modSoundChat.timeCounter)).." ("..core.colorize("#ff0000", modSoundChat.textShutdown)..")")
+      minetest.after(1.0, modSoundChat.doTimerShutdown)
+   else
+      minetest.chat_send_all(("Reiniciando em: %02d"):format(modSoundChat.timeCounter))
+      minetest.after(1.0, modSoundChat.doTimerShutdown)
+   end
+end
+
+modSoundChat.doShutdownAlert = function(sendername, params)
+   local message = "Servidor sera reiniciado. Voltamos dentro de 5 minutos..."
+   modSoundChat.doAlert(sendername, message)
+   if params == nil or params == "" then
+      modSoundChat.doTimerShutdown(30, message)
+   elseif(params:find("%D+")) then
+      modSoundChat.doTimerShutdown(30, message)
+   else 
+      modSoundChat.doTimerShutdown(tonumber(params), message)
+   end
+end
+
 modSoundChat.doMute = function(playername)
 	if type(playername)=="string" and playername~="" then
 		if not modSoundChat.players[playername] then 

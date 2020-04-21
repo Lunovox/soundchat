@@ -43,6 +43,25 @@ minetest.register_chatcommand("alert", {
 	end,
 })
 
+--##################################################
+
+local propShutdownAlert = function()
+   return {
+      params = "<secound>",
+      description = "Shutdown the server after a public message and a alert sound.",
+      privs = {server = true},
+      func = function(sendername, param)
+         modSoundChat.doShutdownAlert(sendername, param)
+      end,
+   }
+end 
+
+minetest.register_chatcommand('smartshutdown', propShutdownAlert())
+minetest.register_chatcommand('sshutdown', propShutdownAlert())
+minetest.register_chatcommand('ssd', propShutdownAlert())
+
+--##################################################
+
 --[[
 minetest.register_chatcommand("soundchat", {
 	params = "",

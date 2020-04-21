@@ -17,3 +17,5 @@ It emits a simple sound when a player send any message in the chat, and an audib
 * ````/mute```` or ````/mudo```` to enables and disables the simple sound of your own individual chat.
 * ````/mutecall```` or ````/nomemudo```` or ````/emudecerchamada```` to enables and disables the alarm sound of call your name.
 * ````/alert <message>```` to send a colored warning with flashy sound for all players (Need the priv 'server')
+* ````/smartshutdown```` or ````/sshutdown```` or ````/ssd```` to shutdown the server after a public message and a alert sound.
+
