@@ -222,9 +222,7 @@ minetest.register_on_chat_message(function(sendername, msg)
    						minetest.chat_send_player(playername, 
    							--core.get_color_escape_sequence("#ffff00")..sendername..core.get_color_escape_sequence("#00ffff").." citou seu nome!"
    							core.colorize("#FF00FF", "[SOUNDCHAT] ")
-   							..(
-   								("O '%s' citou seu nome!"):format(core.colorize("#FFFF00", sendername))
-   							)
+   							..("O '%s' citou seu nome!"):format(core.colorize("#FFFF00", sendername))
    						)
     end
 					elseif not modSoundChat.players[playername].mute then --#################### CONVERSA COMUM #########################################################
