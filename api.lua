@@ -205,9 +205,9 @@ minetest.register_on_chat_message(function(sendername, msg)
 					modSoundChat.players[playername].mute = (type(modSoundChat.players[playername].mute)=="boolean" and modSoundChat.players[playername].mute==true)
 					modSoundChat.players[playername].muteCall = (type(modSoundChat.players[playername].muteCall)=="boolean" and modSoundChat.players[playername].muteCall==true)
 				
-					if msg:lower():find(playername:lower())
+					if tostring(msg:lower()):find(tostring(playername:lower()))
 						or (
-							msg:len()>=4 and playername:lower():find(msg:lower())
+							msg:len()>=4 and playername:len()>=4 and tostring(playername:lower()):find(tostring(msg:lower()))
 						)
 					then --#################### CHAMAR ATENÇÃO #########################################################
     if not modSoundChat.players[playername].muteCall then
